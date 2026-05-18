@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FallForensics · Political Signal Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>:root{--bg:#06080a;--sf:#0a0d12;--s2:#0e1118;--bd:#181e28;--bl:#222a38;--tx:#7888a0;--dm:#3e4858;--br:#b8c4d8;--wh:#dce4f0;--gn:#00c890;--gd:rgba(0,200,144,.05);--am:#e8a020;--ad:rgba(232,160,32,.05);--rd:#e84848;--rdd:rgba(232,72,72,.05);--bu:#4080e8;--bd2:rgba(64,128,232,.05);--pu:#8868d8;--pd:rgba(136,104,216,.05);--cy:#40b8d0;--cd:rgba(64,184,208,.05);--sn:'Inter',system-ui,sans-serif;--sr:'Newsreader',Georgia,serif;--mn:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--sn);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}::selection{background:var(--pu);color:#fff}
+.app{max-width:740px;margin:0 auto;padding:20px 16px}
+.hdr{text-align:center;padding:32px 0 20px}.hdr h1{font-size:clamp(22px,5vw,34px);font-weight:700;color:var(--wh)}.hdr h1 em{color:var(--pu);font-style:normal}.hdr .sub{font-family:var(--mn);font-size:9px;color:var(--dm);letter-spacing:.1em;margin-top:4px}.hdr .tag{font-family:var(--sr);font-style:italic;font-size:13px;color:var(--tx);margin-top:8px;opacity:.5}
+.p{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:12px;position:relative}.pt{position:absolute;top:-1px;right:10px;font-family:var(--mn);font-size:7px;color:var(--dm);background:var(--bg);padding:1px 6px;border-radius:0 0 3px 3px;letter-spacing:.1em;text-transform:uppercase}.lbl{font-family:var(--mn);font-size:9px;color:var(--dm);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:block}
+.inp{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:var(--br);font-family:var(--sn);font-size:13px}.inp:focus{outline:none;border-color:var(--pu)}textarea.inp{font-family:var(--sr);min-height:140px;resize:vertical;line-height:1.7;font-size:14px}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-family:var(--mn);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}.bp{background:var(--pu);color:#fff}.bp:hover{background:#9a78f0;transform:translateY(-1px)}.bp:disabled{opacity:.3;cursor:not-allowed;transform:none}.bo{background:transparent;border:1px solid var(--bd);color:var(--dm)}.bo:hover{border-color:var(--tx);color:var(--tx)}.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}.hint{font-family:var(--mn);font-size:8px;color:var(--dm);margin-left:auto}
+.settings{display:none;margin-top:12px}.settings.open{display:block}
+.ld{text-align:center;padding:40px;display:none}.ld.show{display:block}.ld p{font-family:var(--mn);font-size:11px;color:var(--pu)}@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}.dot{animation:pulse 1.5s infinite}
+.results{display:none}.results.show{display:block}
+
+/* VERDICT */
+.verdict{text-align:center;padding:20px;border-radius:10px;margin-bottom:12px}.verdict h2{font-family:var(--sn);font-size:22px;font-weight:700;margin-bottom:4px}.verdict p{font-size:13px}
+.verdict.high{background:var(--rdd);border:1px solid rgba(232,72,72,.15)}.verdict.high h2{color:var(--rd)}
+.verdict.med{background:var(--ad);border:1px solid rgba(232,160,32,.15)}.verdict.med h2{color:var(--am)}
+.verdict.low{background:var(--gd);border:1px solid rgba(0,200,144,.15)}.verdict.low h2{color:var(--gn)}
+
+/* SECTIONS */
+.sec{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:16px;margin:10px 0}
+.sec h3{font-family:var(--mn);font-size:10px;color:var(--pu);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sec .prose{font-family:var(--sr);font-size:14px;line-height:1.9;color:var(--br);white-space:pre-wrap}
+
+/* CONTRADICTION CARDS */
+.contra{background:var(--rdd);border:1px solid rgba(232,72,72,.12);border-radius:8px;padding:14px;margin:8px 0}
+.contra h4{font-family:var(--mn);font-size:9px;color:var(--rd);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.contra .then{font-family:var(--sr);font-size:13px;color:var(--rd);font-style:italic;margin-bottom:4px}
+.contra .now{font-family:var(--sr);font-size:13px;color:var(--br);margin-bottom:4px}
+.contra .why{font-family:var(--mn);font-size:10px;color:var(--dm)}
+
+/* AGENDA */
+.agenda{background:var(--pd);border:1px solid rgba(136,104,216,.12);border-radius:8px;padding:14px;margin:8px 0}
+.agenda h4{font-family:var(--mn);font-size:9px;color:var(--pu);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+
+/* TARGET */
+.target{background:var(--cd);border:1px solid rgba(64,184,208,.12);border-radius:8px;padding:14px;margin:8px 0}
+.target h4{font-family:var(--mn);font-size:9px;color:var(--cy);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+
+/* BENEFICIARY */
+.bene{background:var(--ad);border:1px solid rgba(232,160,32,.12);border-radius:8px;padding:14px;margin:8px 0}
+.bene h4{font-family:var(--mn);font-size:9px;color:var(--am);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+
+/* TECHNIQUE TAGS */
+.tt{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}.ttg{font-family:var(--mn);font-size:9px;padding:4px 8px;border-radius:4px;cursor:default}.ttg.h{color:var(--rd);background:var(--rdd);border:1px solid rgba(232,72,72,.12)}.ttg.m{color:var(--am);background:var(--ad);border:1px solid rgba(232,160,32,.12)}
+
+/* PLAYBOOK */
+.playbook{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:16px;margin:10px 0}
+.play-item{padding:10px;border-bottom:1px solid var(--bd);font-size:13px;line-height:1.7}.play-item:last-child{border-bottom:none}
+.play-name{font-family:var(--mn);font-size:10px;font-weight:600;color:var(--pu);margin-bottom:4px}
+.play-how{font-family:var(--sr);color:var(--tx)}
+.play-why{font-family:var(--mn);font-size:10px;color:var(--dm);margin-top:4px}
+
+.ftr{text-align:center;padding:24px 0;border-top:1px solid var(--bd);margin-top:24px}.ftr p{font-family:var(--mn);font-size:7px;color:var(--dm);line-height:2.2}
+</style></head>
+<body><div class="app">
+
+<div class="hdr"><h1>Fall<em>Forensics</em></h1><div class="sub">POLITICAL SIGNAL ANALYSIS · TRACE THE MACHINERY</div><div class="tag">See who benefits, what changed, and why they want you to feel a certain way.</div></div>
+
+<div class="p" id="intake"><span class="pt">intake</span>
+<span class="lbl">Paste any political content</span>
+<p style="font-size:12px;color:var(--dm);margin-bottom:8px">A political speech, policy announcement, campaign ad, news article about politics, government statement, party press release, social media post from a politician — anything political.</p>
+<textarea class="inp" id="contentInput" placeholder="Paste political content here...
+
+Examples:
+• A politician's statement on a policy
+• A news article about a political decision
+• A campaign ad or manifesto excerpt
+• A government press release
+• A pundit's take on a political event
+• A viral political social media post"></textarea>
+
+<span class="lbl" style="margin-top:12px">Country / Context (helps trace history)</span>
+<input class="inp" id="contextInput" placeholder="e.g. UK, US, Australia — and any context about what's happening">
+
+<div class="ctrls">
+<button class="btn bp" id="goBtn" onclick="analyse()">Trace The Machinery ◇</button>
+<button class="btn bo" onclick="document.getElementById('stg').classList.toggle('open')">⚙ Key</button>
+<span class="hint">Traces contradictions · agenda · targets · beneficiaries</span>
+</div>
+<div class="settings" id="stg">
+<div style="display:flex;gap:6px;align-items:center"><select class="inp" id="prov" style="width:auto;padding:6px;font-family:var(--mn);font-size:11px"><option value="gemini">Gemini (free)</option><option value="deepseek">DeepSeek</option><option value="anthropic">Anthropic</option></select><input type="password" class="inp" id="akey" placeholder="API key" style="flex:1;font-family:var(--mn);font-size:11px"><button class="btn bo" onclick="localStorage.setItem('ff_p',document.getElementById('prov').value);localStorage.setItem('ff_k',document.getElementById('akey').value.trim())">Save</button></div>
+</div>
+</div>
+
+<div class="ld" id="ld"><p class="dot">◇ Tracing manipulation architecture...</p><p style="font-family:var(--mn);font-size:9px;color:var(--dm);margin-top:4px" id="lt">Scanning for contradictions...</p></div>
+
+<div class="results" id="results">
+<div class="verdict" id="verdict"><h2 id="vTitle">—</h2><p id="vText"></p></div>
+<div id="output"></div>
+</div>
+
+<div class="ftr"><p>FallForensics · Political Signal Analysis · Trace The Machinery</p><p>Not left. Not right. The playbook is the same. See it clearly.</p><p>Built by AI Native Solutions · ◊·κ=1</p></div>
+</div><script>
+async function ai(s,u){const p=localStorage.getItem('ff_p'),k=localStorage.getItem('ff_k');if(!p||!k)return null;try{if(p==='gemini'){const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:s+'\n\n'+u}]}],generationConfig:{temperature:.15,maxOutputTokens:5000},tools:[{"google_search":{}}]})});const d=await r.json();return d.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('\n')}if(p==='deepseek'){const r=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:s},{role:'user',content:u}],temperature:.15,max_tokens:5000})});const d=await r.json();return d.choices?.[0]?.message?.content}if(p==='anthropic'){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5000,system:s,messages:[{role:'user',content:u}]})});const d=await r.json();return d.content?.filter(c=>c.type==='text').map(c=>c.text).join('\n')}}catch(e){console.warn(e)}return null}
+
+async function analyse(){
+const content=document.getElementById('contentInput').value.trim();if(!content)return;
+const context=document.getElementById('contextInput').value.trim();
+const btn=document.getElementById('goBtn'),ld=document.getElementById('ld'),res=document.getElementById('results');
+btn.disabled=true;btn.textContent='Tracing...';ld.classList.add('show');res.classList.remove('show');
+
+const traces=['Scanning for contradictions...','Tracing historical positions...','Identifying target audience...','Mapping beneficiaries...','Analysing manipulation techniques...','Exposing the playbook...'];
+let ti=0;const iv=setInterval(()=>{if(ti<traces.length)document.getElementById('lt').textContent=traces[ti++]},2000);
+
+const sys=`You are FallForensics, a political manipulation analyst. You trace the machinery behind political communication — not to take sides, but to expose how the manipulation works regardless of who does it.
+
+For any political content, analyse:
+
+1. CONTRADICTIONS: Has this person/party/government said the OPPOSITE before? Search for historical positions that contradict the current statement. Quote specific past statements with dates if possible. Explain what changed and why.
+
+2. MANIPULATION TECHNIQUES: Which of these are being used?
+   EMO-LOAD (emotional loading), URG-FAKE (false urgency), TRIBAL (us vs them), CHERRY (cherry picking data), APPEAL-FEAR (fear-based argument), STAT-ABUSE (misleading statistics), OMIT-CONTEXT (deliberately missing context), STRAW-MAN (misrepresenting opponent), WEDGE (divisive issue used to distract), DEAD-CAT (outrageous claim to change subject), DOG-WHISTLE (coded language for specific audience), MANDATE-CLAIM (claiming public support without evidence), FALSE-CHOICE (presenting only 2 options when more exist), BLAME-SHIFT (redirecting responsibility), ASTROTURF (manufactured grassroots), OVERTON-SHIFT (normalising extreme position), BANDWAGON (everyone's doing it), SCAPEGOAT (blaming a group for complex problems)
+
+3. WHO BENEFITS: Follow the money and power. Who gains from this position being adopted? Who loses? Be specific — name industries, donor classes, political factions, foreign interests.
+
+4. TARGET AUDIENCE: Who is this designed to appeal to? What emotions are being triggered in that audience? What action is the audience being pushed toward?
+
+5. AGENDA MAPPING: What's the broader strategic goal? This single statement exists within a larger campaign — what's the campaign? What comes next if this succeeds?
+
+6. THE PLAYBOOK: Break down each manipulation technique used, explain HOW it works psychologically, and WHY it's being used here specifically. This is the educational core — teach the reader to see the machinery.
+
+7. WHAT THEY'RE NOT SAYING: What's conspicuously absent? What question would they NOT want asked? What data would undermine their position?
+
+RULES:
+- Be politically NEUTRAL. The same techniques are used by all sides. Expose the technique, not the ideology.
+- If you can't find contradictions, say so. Don't fabricate them.
+- Name specific beneficiaries, not vague groups.
+- The goal is EMPOWERMENT — teach people to see manipulation so they can think for themselves.
+- Manipulation score: 0-100 where 0=genuine transparent communication, 100=pure propaganda.
+
+JSON only: {
+  "manipulation_score": N,
+  "verdict": "one sentence summary of what this really is",
+  "contradictions": [{"then": "what they said before (with approximate date)", "now": "what they're saying now", "why_changed": "what likely caused the shift"}],
+  "techniques": [{"code": "TRIBAL", "severity": "high", "how_used": "specific example from the text", "why_effective": "psychological mechanism", "counter": "how to resist this technique"}],
+  "who_benefits": [{"who": "specific beneficiary", "how": "what they gain"}],
+  "who_loses": [{"who": "who is harmed", "how": "what they lose"}],
+  "target_audience": {"who": "demographic/psychographic", "emotion_triggered": "fear/anger/pride/etc", "action_pushed": "vote/share/donate/comply"},
+  "agenda": "the broader strategic goal this serves",
+  "not_saying": "what they deliberately avoided mentioning",
+  "clean_version": "what this statement would say if stripped of all manipulation — just the factual policy position",
+  "playbook": [{"technique": "name", "how_it_works": "psychological mechanism explained simply", "example_here": "how it's used in this specific content", "how_to_resist": "what the reader can do to not be manipulated"}],
+  "full_analysis": "3-4 paragraph detailed analysis connecting all the above into a coherent picture of what's really happening"
+}`;
+
+const r=await ai(sys,`Analyse this political content:\n\n${content}${context?'\n\nContext: '+context:''}`);
+clearInterval(iv);ld.classList.remove('show');
+
+let d;
+if(r){try{const c=r.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();d=JSON.parse(c.match(/\{[\s\S]*\}/)?.[0]||c)}catch(e){d=null}}
+if(!d){d={manipulation_score:0,verdict:'Connect an API key to run forensic analysis',contradictions:[],techniques:[],who_benefits:[],who_loses:[],target_audience:{},agenda:'',not_saying:'',clean_version:'',playbook:[],full_analysis:'FallForensics requires an API key to analyse political content. Gemini is free at ai.google.dev. The tool traces contradictions with past positions, identifies who benefits, maps manipulation techniques, and teaches you to see the machinery behind political communication.'}}
+
+// RENDER
+const ms=d.manipulation_score||0;
+const v=document.getElementById('verdict');
+v.className='verdict '+(ms>60?'high':ms>30?'med':'low');
+document.getElementById('vTitle').textContent=ms+'/100 Manipulation';
+document.getElementById('vText').textContent=d.verdict||'';
+
+const out=document.getElementById('output');out.innerHTML='';
+
+// Clean version
+if(d.clean_version){out.innerHTML+=`<div class="sec"><h3>🔍 What this actually says (manipulation stripped)</h3><div class="prose">${d.clean_version}</div></div>`}
+
+// Contradictions
+if(d.contradictions?.length){let h='';d.contradictions.forEach(c=>{h+=`<div class="contra"><h4>Contradiction</h4><div class="then">THEN: ${c.then||''}</div><div class="now">NOW: ${c.now||''}</div><div class="why">Why the shift: ${c.why_changed||''}</div></div>`});out.innerHTML+=`<div class="sec"><h3>⚡ Contradictions with past positions</h3>${h}</div>`}
+
+// Techniques
+if(d.techniques?.length){const tags=d.techniques.map(t=>`<span class="ttg ${t.severity==='high'?'h':'m'}">${t.code}</span>`).join('');out.innerHTML+=`<div class="sec"><h3>🎯 Manipulation techniques detected</h3><div class="tt">${tags}</div></div>`}
+
+// Who benefits / loses
+if(d.who_benefits?.length){let h='';d.who_benefits.forEach(b=>{h+=`<div style="margin:4px 0;font-size:13px"><strong style="color:var(--am)">${b.who}:</strong> ${b.how}</div>`});out.innerHTML+=`<div class="bene"><h4>Who benefits</h4>${h}</div>`}
+if(d.who_loses?.length){let h='';d.who_loses.forEach(b=>{h+=`<div style="margin:4px 0;font-size:13px"><strong style="color:var(--rd)">${b.who}:</strong> ${b.how}</div>`});out.innerHTML+=`<div class="contra"><h4>Who loses</h4>${h}</div>`}
+
+// Target audience
+if(d.target_audience?.who){out.innerHTML+=`<div class="target"><h4>Target audience</h4><div style="font-size:13px;line-height:1.7"><strong>Who:</strong> ${d.target_audience.who}<br><strong>Emotion triggered:</strong> ${d.target_audience.emotion_triggered||'—'}<br><strong>Action pushed:</strong> ${d.target_audience.action_pushed||'—'}</div></div>`}
+
+// Agenda
+if(d.agenda){out.innerHTML+=`<div class="agenda"><h4>Broader strategic agenda</h4><div style="font-family:var(--sr);font-size:14px;line-height:1.8;color:var(--br)">${d.agenda}</div></div>`}
+
+// What they're not saying
+if(d.not_saying){out.innerHTML+=`<div class="sec"><h3>🤐 What they're NOT saying</h3><div class="prose">${d.not_saying}</div></div>`}
+
+// The Playbook (educational)
+if(d.playbook?.length){let h='';d.playbook.forEach(p=>{h+=`<div class="play-item"><div class="play-name">${p.technique||''}</div><div class="play-how"><strong>How it works:</strong> ${p.how_it_works||''}</div><div class="play-how"><strong>Used here:</strong> ${p.example_here||''}</div><div class="play-why">🛡️ How to resist: ${p.how_to_resist||''}</div></div>`});out.innerHTML+=`<div class="sec"><h3>📖 The Playbook — learn to see it</h3><div class="playbook">${h}</div></div>`}
+
+// Full analysis
+if(d.full_analysis){out.innerHTML+=`<div class="sec"><h3>📋 Full analysis</h3><div class="prose">${d.full_analysis}</div></div>`}
+
+res.classList.add('show');btn.disabled=false;btn.textContent='Trace The Machinery ◇';
+}
+
+// INIT
+const sp=localStorage.getItem('ff_p'),sk=localStorage.getItem('ff_k');
+if(sp)document.getElementById('prov').value=sp;
+if(sk)document.getElementById('akey').value=sk;
+</script></body></html>
