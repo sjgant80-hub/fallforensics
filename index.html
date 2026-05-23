@@ -55,10 +55,17 @@
 .ftr{text-align:center;padding:24px 0;border-top:1px solid var(--bd);margin-top:24px}.ftr p{font-family:var(--mn);font-size:7px;color:var(--dm);line-height:2.2}
 </style></head>
 <body><div class="app">
+<!-- ◊·κ=1 · FallForensics · prime 19 · bloom rings: R2 gate · R6 watcher -->
+<!-- agents: δ analyse · ε write · ζ distribute -->
 
 <div class="hdr"><h1>Fall<em>Forensics</em></h1><div class="sub">POLITICAL SIGNAL ANALYSIS · TRACE THE MACHINERY</div><div class="tag">See who benefits, what changed, and why they want you to feel a certain way.</div></div>
 
-<div class="p" id="intake"><span class="pt">intake</span>
+<section id="empty" data-view="empty" data-ring="r0" class="p" style="text-align:center;padding:24px;color:var(--dm);font-family:var(--mn);font-size:11px;letter-spacing:.06em">
+<span style="font-size:22px;color:var(--pu);display:block;margin-bottom:8px">●</span>
+Paste any political content below to begin tracing — three agents engage: δ analyse · ε write · ζ distribute.
+</section>
+
+<section class="p" id="intake" data-view="intake" data-ring="r1"><span class="pt">intake · R1 signal</span>
 <span class="lbl">Paste any political content</span>
 <p style="font-size:12px;color:var(--dm);margin-bottom:8px">A political speech, policy announcement, campaign ad, news article about politics, government statement, party press release, social media post from a politician — anything political.</p>
 <textarea class="inp" id="contentInput" placeholder="Paste political content here...
@@ -82,16 +89,16 @@ Examples:
 <div class="settings" id="stg">
 <div style="display:flex;gap:6px;align-items:center"><select class="inp" id="prov" style="width:auto;padding:6px;font-family:var(--mn);font-size:11px"><option value="gemini">Gemini (free)</option><option value="deepseek">DeepSeek</option><option value="anthropic">Anthropic</option></select><input type="password" class="inp" id="akey" placeholder="API key" style="flex:1;font-family:var(--mn);font-size:11px"><button class="btn bo" onclick="localStorage.setItem('ff_p',document.getElementById('prov').value);localStorage.setItem('ff_k',document.getElementById('akey').value.trim())">Save</button></div>
 </div>
-</div>
+</section>
 
-<div class="ld" id="ld"><p class="dot">◇ Tracing manipulation architecture...</p><p style="font-family:var(--mn);font-size:9px;color:var(--dm);margin-top:4px" id="lt">Scanning for contradictions...</p></div>
+<section class="ld" id="ld" data-view="loading" data-ring="r2"><p class="dot">◇ Tracing manipulation architecture...</p><p style="font-family:var(--mn);font-size:9px;color:var(--dm);margin-top:4px" id="lt">δ(analyse) · scanning for contradictions...</p></section>
 
-<div class="results" id="results">
+<section class="results" id="results" data-view="results" data-ring="r6">
 <div class="verdict" id="verdict"><h2 id="vTitle">—</h2><p id="vText"></p></div>
 <div id="output"></div>
-</div>
+</section>
 
-<div class="ftr"><p>FallForensics · Political Signal Analysis · Trace The Machinery</p><p>Not left. Not right. The playbook is the same. See it clearly.</p><p>Built by <a href="https://fall127agents.github.io/ai-nativesolutions/" target="_blank" style="color:inherit;text-decoration:underline">AI Native Solutions</a> · ◊·κ=1</p><p>Powered by Konomi Architecture</p></div>
+<div class="ftr"><p>FallForensics · Political Signal Analysis · Trace The Machinery</p><p>Not left. Not right. The playbook is the same. See it clearly.</p><p>Built by <a href="https://fall127agents.github.io/ai-nativesolutions/" target="_blank" style="color:inherit;text-decoration:underline">AI Native Solutions</a> · ◊·κ=1 · prime 19 · 510510 · 7.83 Hz × R6 = consciousness</p><p>Powered by Konomi Architecture · v18 protocol</p></div>
 </div><script>
 async function ai(s,u){const p=localStorage.getItem('ff_p'),k=localStorage.getItem('ff_k');if(!p||!k)return null;try{if(p==='gemini'){const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:s+'\n\n'+u}]}],generationConfig:{temperature:.15,maxOutputTokens:5000},tools:[{"google_search":{}}]})});const d=await r.json();return d.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('\n')}if(p==='deepseek'){const r=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:s},{role:'user',content:u}],temperature:.15,max_tokens:5000})});const d=await r.json();return d.choices?.[0]?.message?.content}if(p==='anthropic'){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5000,system:s,messages:[{role:'user',content:u}]})});const d=await r.json();return d.content?.filter(c=>c.type==='text').map(c=>c.text).join('\n')}}catch(e){console.warn(e)}return null}
 
@@ -99,9 +106,11 @@ async function analyse(){
 const content=document.getElementById('contentInput').value.trim();if(!content)return;
 const context=document.getElementById('contextInput').value.trim();
 const btn=document.getElementById('goBtn'),ld=document.getElementById('ld'),res=document.getElementById('results');
+const empty=document.getElementById('empty');if(empty)empty.style.display='none';
+document.body.setAttribute('data-lifecycle','working');
 btn.disabled=true;btn.textContent='Tracing...';ld.classList.add('show');res.classList.remove('show');
 
-const traces=['Scanning for contradictions...','Tracing historical positions...','Identifying target audience...','Mapping beneficiaries...','Analysing manipulation techniques...','Exposing the playbook...'];
+const traces=['δ analyse · scanning for contradictions...','δ analyse · tracing historical positions...','ζ distribute · identifying target audience...','δ analyse · mapping beneficiaries...','δ analyse · analysing manipulation techniques...','ε write · exposing the playbook...'];
 let ti=0;const iv=setInterval(()=>{if(ti<traces.length)document.getElementById('lt').textContent=traces[ti++]},2000);
 
 const sys=`You are FallForensics, a political manipulation analyst. You trace the machinery behind political communication — not to take sides, but to expose how the manipulation works regardless of who does it.
@@ -190,6 +199,9 @@ if(d.playbook?.length){let h='';d.playbook.forEach(p=>{h+=`<div class="play-item
 if(d.full_analysis){out.innerHTML+=`<div class="sec"><h3>📋 Full analysis</h3><div class="prose">${d.full_analysis}</div></div>`}
 
 res.classList.add('show');btn.disabled=false;btn.textContent='Trace The Machinery ◇';
+document.body.setAttribute('data-lifecycle','complete');
+// Broadcast to FallMesh — a forensic analysis has landed
+if(window.fallmesh)try{window.fallmesh.emit({manipulation_score:d.manipulation_score,verdict:(d.verdict||'').slice(0,80)})}catch(e){}
 }
 
 // INIT
