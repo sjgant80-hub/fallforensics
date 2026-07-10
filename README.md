@@ -1,24 +1,19 @@
-# FallForensics
+# fallforensics
 
-**Political Signal Analysis**
+> Sovereign single-file tool
 
-Sovereign political speech and statement forensics. Contradiction tracing. Playbook exposure. What they said vs what they did.
+## Install
 
-## Features
+```
+(see source for install)
+```
 
-- Political statement analysis — extract claims, promises, and commitments
-- Contradiction tracing — compare statements over time, detect reversals
-- Playbook exposure — identify rhetorical strategies and manipulation patterns
-- Timeline builder — track position changes on key issues
-- Source cross-referencing — verify claims against public record
-- Sentiment and register analysis — detect tone shifts
-- Multi-provider AI: Gemini (free) → DeepSeek (free) → Anthropic (paid)
-- All analysis local — no data leaves your browser
+## Links
 
-## Run
+- FallMarket listing: https://sjgant80-hub.github.io/fallmarket/listing.html?id=fallforensics
+- Source: https://github.com/sjgant80-hub/fallforensics
+- Playground: https://sjgant80-hub.github.io/fallforensics/
 
-Double-click `FallForensics.html`. Paste a political statement. See through it.
+## License
 
----
-
-Part of the Fall tool suite. Accountability through analysis.
+MIT · Copyright 2026 AI-Native Solutions · https://ai-nativesolutions.com
