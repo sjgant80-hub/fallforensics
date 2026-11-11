@@ -55,7 +55,7 @@
 .ftr{text-align:center;padding:24px 0;border-top:1px solid var(--bd);margin-top:24px}.ftr p{font-family:var(--mn);font-size:7px;color:var(--dm);line-height:2.2}
 </style></head>
 <body><div class="app">
-<!-- ◊·κ=1 · FallForensics · prime 19 · bloom rings: R2 gate · R6 watcher -->
+<!-- FallForensics · bloom rings: R2 gate · R6 watcher -->
 <!-- agents: δ analyse · ε write · ζ distribute -->
 
 <div class="hdr"><h1>Fall<em>Forensics</em></h1><div class="sub">POLITICAL SIGNAL ANALYSIS · TRACE THE MACHINERY</div><div class="tag">See who benefits, what changed, and why they want you to feel a certain way.</div></div>
@@ -98,7 +98,7 @@ Examples:
 <div id="output"></div>
 </section>
 
-<div class="ftr"><p>FallForensics · Political Signal Analysis · Trace The Machinery</p><p>Not left. Not right. The playbook is the same. See it clearly.</p><p>Built by <a href="https://fall127agents.github.io/ai-nativesolutions/" target="_blank" style="color:inherit;text-decoration:underline">AI Native Solutions</a> · ◊·κ=1 · prime 19 · 510510 · 7.83 Hz × R6 = consciousness</p><p>Powered by Konomi Architecture · v18 protocol</p></div>
+<div class="ftr"><p>FallForensics · Political Signal Analysis · Trace The Machinery</p><p>Not left. Not right. The playbook is the same. See it clearly.</p><p>Built by <a href="https://fall127agents.github.io/ai-nativesolutions/" target="_blank" style="color:inherit;text-decoration:underline">AI Native Solutions</a> · 510510 · 7.83 Hz × R6 = consciousness</p><p>Powered by Konomi Architecture · v18 protocol</p></div>
 </div><script>
 async function ai(s,u){const p=localStorage.getItem('ff_p'),k=localStorage.getItem('ff_k');if(!p||!k)return null;try{if(p==='gemini'){const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:s+'\n\n'+u}]}],generationConfig:{temperature:.15,maxOutputTokens:5000},tools:[{"google_search":{}}]})});const d=await r.json();return d.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('\n')}if(p==='deepseek'){const r=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:s},{role:'user',content:u}],temperature:.15,max_tokens:5000})});const d=await r.json();return d.choices?.[0]?.message?.content}if(p==='anthropic'){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5000,system:s,messages:[{role:'user',content:u}]})});const d=await r.json();return d.content?.filter(c=>c.type==='text').map(c=>c.text).join('\n')}}catch(e){console.warn(e)}return null}
 
@@ -209,7 +209,7 @@ const sp=localStorage.getItem('ff_p'),sk=localStorage.getItem('ff_k');
 if(sp)document.getElementById('prov').value=sp;
 if(sk)document.getElementById('akey').value=sk;
 </script>
-<!-- forge-mesh-shim-v1 · ◊·κ=1 · FallMesh interop · prime 19 -->
+<!-- forge-mesh-shim-v1 · FallMesh interop -->
 <script>
 (function(){
   if (typeof BroadcastChannel === 'undefined') return;
